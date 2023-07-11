@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nwafu.driftbottle.mapper.BottleMapper">
+    <insert id="insert">
+        insert into drift_bottle (content,put_time,status,put_name)
+        values(#{content},#{putTime},#{status},#{putName})
+    </insert>
+
+    <select id="getNoTakeBottle" resultType="com.nwafu.driftbottle.pojo.Bottle">
+<!--        随机选择一个未被拿出的瓶子-->
+        SELECT * FROM drift_bottle AS t1 JOIN
+        (SELECT ROUND(RAND()*(SELECT MAX(id) FROM drift_bottle)) AS id) AS t2
+        WHERE t1.id>=t2.id and t1.status=0
+        ORDER BY t1.id LIMIT 1;
+    </select>
+
+    <update id="update">
+        update drift_bottle set status=#{status}, take_time=#{takeTime} where id=#{id}
+    </update>
+
+
+
+</mapper>
